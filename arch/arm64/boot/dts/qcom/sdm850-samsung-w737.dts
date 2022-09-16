@@ -100,7 +100,7 @@
 			reg = <0 0x96000000 0 0x2000000>;
 			no-map;
 		};
-
+		
 		cdsp_mem: memory@98000000 {
 			reg = <0 0x98000000 0 0x800000>;
 			no-map;
@@ -120,6 +120,18 @@
 			reg = <0 0x98f00000 0 0x100000>;
 			no-map;
 		};
+	};
+	sn65dsi86_refclk: sn65dsi86-refclk {
+		compatible = "fixed-clock";
+		#clock-cells = <0>;
+
+		clock-frequency = <19200000>;
+	};
+
+	backlight: backlight {
+		compatible = "pwm-backlight";
+		pwms = <&sn65dsi86 1000000>;
+		enable-gpios = <&tlmm 11 GPIO_ACTIVE_HIGH>;
 	};
 };
 
@@ -348,13 +360,74 @@
 			   <GCC_LPASS_SWAY_CLK>;
 };
 
+&gmu {
+	status = "okay";
+};
+
+&gpu {
+	status = "okay";
+	zap-shader {
+		memory-region = <&gpu_mem>;
+		firmware-name = "qcom/samsung/w737/qcdxkmsuc850.mbn";
+	};
+};
+
 &i2c10 {
 	status = "okay";
 	clock-frequency = <400000>;
 
+	sn65dsi86: bridge@2c {
+		compatible = "ti,sn65dsi86";
+		reg = <0x2c>;
+		pinctrl-names = "default";
+		pinctrl-0 = <&sn65dsi86_pin_active>;
+
+		enable-gpios = <&tlmm 96 GPIO_ACTIVE_HIGH>;
+
+		vpll-supply = <&vreg_l14a_1p88>;
+		vccio-supply = <&vreg_l14a_1p88>;
+
+		clocks = <&sn65dsi86_refclk>;
+		clock-names = "refclk";
+
+		no-hpd;
+		#pwm-cells = <1>;
+
+		ports {
+			#address-cells = <1>;
+			#size-cells = <0>;
+
+			port@0 {
+				reg = <0>;
+				sn65dsi86_in_a: endpoint {
+					remote-endpoint = <&dsi0_out>;
+				};
+			};
+
+			port@1 {
+				reg = <1>;
+				sn65dsi86_out: endpoint {
+					remote-endpoint = <&panel_in_edp>;
+				};
+			};
+		};
+
+		aux-bus {
+			panel: panel {
+				compatible = "boe,nv110wtm_n61"; /* THIS IS NOT THE CORRECT EDID */
+				backlight = <&backlight>;
+
+				port {
+					panel_in_edp: endpoint {
+						remote-endpoint = <&sn65dsi86_out>;
+					};
+				};
+			};
+		};
+	};
+};
 	/* SN65DSI86 @ 0x2c */
 	/* The panel requires dual DSI, which is not supported by the bridge driver */
-};
 
 &i2c11 {
 	status = "okay";
@@ -546,6 +619,12 @@
 
 &tlmm {
 	gpio-reserved-ranges = <0 6>, <85 4>;
+	
+	sn65dsi86_pin_active: sn65dsi86-enable {
+		pins = "gpio96";
+		drive-strength = <2>;
+		bias-disable;
+	};
 
 	pen_irq_l: pen-irq-l {
 		pinmux {
