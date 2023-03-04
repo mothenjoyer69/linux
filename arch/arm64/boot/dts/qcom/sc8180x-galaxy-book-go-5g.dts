@@ -28,37 +28,37 @@
 	chosen { };
 
 	reserved-memory { // Values from Galaxy Book S, placeholder only
-		rmtfs_mem: memory@85500000 {
+		rmtfs_mem: memory@00000000 {
 			compatible = "qcom,rmtfs-mem";
-			reg = <0x0 0x85500000 0x0 0x200000>;
+			reg = ;
 			no-map;
 
 			qcom,client-id = <1>;
 			qcom,vmid = <15>;
 		};
 
-		wlan_mem: memory@8bc00000 {
-			reg = <0x0 0x8bc00000 0x0 0x180000>;
+		wlan_mem: memory@00000000 {
+			reg = ;
 			no-map;
 		};
 
-		mpss_mem: memory@8d800000 {
-			reg = <0x0 0x8d800000 0x0 0x3000000>;
+		mpss_mem: memory@00000000 {
+			reg = ;
 			no-map;
 		};
 
-		adsp_mem: memory@90800000 {
-			reg = <0x0 0x90800000 0x0 0x1c00000>;
+		adsp_mem: memory@00000000 {
+			reg = ;
 			no-map;
 		};
 
-		gpu_mem: memory@98715000 {
-			reg = <0x0 0x98715000 0x0 0x2000>;
+		gpu_mem: memory@00000000 {
+			reg = ;
 			no-map;
 		};
 
-		cdsp_mem: memory@98900000 {
-			reg = <0x0 0x98900000 0x0 0x1400000>;
+		cdsp_mem: memory@00000000 {
+			reg = ;
 			no-map;
 		};
 	};
@@ -66,16 +66,16 @@
 	vph_pwr: vph-pwr-regulator {
 		compatible = "regulator-fixed";
 		regulator-name = "vph_pwr";
-		regulator-min-microvolt = <3700000>;
-		regulator-max-microvolt = <3700000>;
+		regulator-min-microvolt = ;
+		regulator-max-microvolt = ;
 	};
 
 	vreg_s4a_1p8: pm8150-s4 {
 		compatible = "regulator-fixed";
 		regulator-name = "vreg_s4a_1p8";
 
-		regulator-min-microvolt = <1800000>;
-		regulator-max-microvolt = <1800000>;
+		regulator-min-microvolt = ;
+		regulator-max-microvolt = ;
 
 		regulator-always-on;
 		regulator-boot-on;
@@ -118,97 +118,87 @@
 		};
 
 		ldo1 {
-			regulator-min-microvolt = <1200000>;
-			regulator-max-microvolt = <1200000>;
-			/* failed to set initial mode -ETIMEDOUT */ 
+			regulator-min-microvolt = ;
+			regulator-max-microvolt = ;
 			// regulator-initial-mode = <RPMH_REGULATOR_MODE_HPM>;
 		};
 
 		ldo2 {
-			regulator-min-microvolt = <2800000>;
-			regulator-max-microvolt = <2850000>;
-			/* failed to set initial mode -ETIMEDOUT */ 
+			regulator-min-microvolt = ;
+			regulator-max-microvolt = ;
 			// regulator-initial-mode = <RPMH_REGULATOR_MODE_HPM>;
 		};
 
 		ldo3 {
-			/* voltage constraints are not in ACPI */
 			regulator-initial-mode = <RPMH_REGULATOR_MODE_HPM>;
 		};
 
 		ldo5 {
-			/* voltage constraints are not in ACPI */
 			regulator-initial-mode = <RPMH_REGULATOR_MODE_HPM>;
 		};
 
 		ldo6 {
-			regulator-min-microvolt = <1200000>;
-			regulator-max-microvolt = <1200000>;
+			regulator-min-microvolt = ;
+			regulator-max-microvolt = ;
 			regulator-initial-mode = <RPMH_REGULATOR_MODE_HPM>;
 		};
 
 		vreg_l7a_1p8: ldo7 {
-			regulator-min-microvolt = <1800000>;
-			regulator-max-microvolt = <1800000>;
+			regulator-min-microvolt = ;
+			regulator-max-microvolt = ;
 			regulator-initial-mode = <RPMH_REGULATOR_MODE_HPM>;
 		};
 
 		vreg_l9a_1p3: ldo9 {
-			regulator-min-microvolt = <1304000>;
-			regulator-max-microvolt = <1304000>;
+			regulator-min-microvolt = ;
+			regulator-max-microvolt = ;
 			regulator-initial-mode = <RPMH_REGULATOR_MODE_HPM>;
 		};
 
 		ldo10 {
-			regulator-min-microvolt = <2850000>;
-			regulator-max-microvolt = <3000000>;
+			regulator-min-microvolt = ;
+			regulator-max-microvolt = ;
 			regulator-initial-mode = <RPMH_REGULATOR_MODE_HPM>;
 		};
 
 		ldo11 {
-			/* voltage constraints are not in ACPI */
+			
 			regulator-initial-mode = <RPMH_REGULATOR_MODE_HPM>;
 		};
 
 		vreg_l12a_1p8: ldo12 {
-			regulator-min-microvolt = <1800000>;
-			regulator-max-microvolt = <1800000>;
+			regulator-min-microvolt = ;
+			regulator-max-microvolt = ;
 			regulator-initial-mode = <RPMH_REGULATOR_MODE_HPM>;
 		};
 
 		ldo13 {
-			/* voltage constraints are not in ACPI */
 			regulator-initial-mode = <RPMH_REGULATOR_MODE_HPM>;
 		};
 
 		ldo14 {
-			regulator-min-microvolt = <1800000>;
-			regulator-max-microvolt = <1800000>;
-			/* failed to set initial mode -ETIMEDOUT */ 
+			regulator-min-microvolt = ;
+			regulator-max-microvolt = ;
 			//regulator-initial-mode = <RPMH_REGULATOR_MODE_HPM>;
 		}; 
 
 		ldo15 {
-			/* voltage constraints are not in ACPI */
 			regulator-initial-mode = <RPMH_REGULATOR_MODE_HPM>;
 		};
 
 		ldo16 {
-			regulator-min-microvolt = <2800000>;
-			regulator-max-microvolt = <2800000>;
+			regulator-min-microvolt = ;
+			regulator-max-microvolt = ;
 			regulator-initial-mode = <RPMH_REGULATOR_MODE_HPM>;
 		};
 
-		/* ldo17 causes failed to get current voltage -ENOTRECOVERABLE */
-
-		// ldo17 {
-		// 	regulator-min-microvolt = <2850000>;
-		// 	regulator-max-microvolt = <2850000>;
-		// 	regulator-initial-mode = <RPMH_REGULATOR_MODE_HPM>;
-		// };
+		ldo17 {
+			regulator-min-microvolt = ;
+			regulator-max-microvolt = ;
+			regulator-initial-mode = <RPMH_REGULATOR_MODE_HPM>;
+		};
 
 		ldo18 {
-			/* voltage constraints are not in ACPI */
 			regulator-initial-mode = <RPMH_REGULATOR_MODE_HPM>;
 		};
 	};
@@ -238,8 +228,8 @@
 		};
 
 		smps8 {
-			regulator-min-microvolt = <1800000>;
-			regulator-max-microvolt = <1800000>;
+			regulator-min-microvolt = ;
+			regulator-max-microvolt = ;
 			regulator-initial-mode = <RPMH_REGULATOR_MODE_HPM>;
 		};
 
@@ -249,62 +239,58 @@
 		};
 
 		ldo2 {
-			regulator-min-microvolt = <1200000>;
-			regulator-max-microvolt = <1200000>;
+			regulator-min-microvolt = ;
+			regulator-max-microvolt = ;
 			regulator-initial-mode = <RPMH_REGULATOR_MODE_HPM>;
 		};
 
 		vreg_l3c_1p2: ldo3 {
-			regulator-min-microvolt = <1200000>;
-			regulator-max-microvolt = <1200000>;
+			regulator-min-microvolt = ;
+			regulator-max-microvolt = ;
 			regulator-initial-mode = <RPMH_REGULATOR_MODE_HPM>;
 		};
 
-		/* ldo4 is needed for touch, but causes failed to get current voltage -ENOTRECOVERABLE */
-
-		// vreg_l4c_3v3: ldo4 {
-		// 	regulator-min-microvolt = <3300000>;
-		// 	regulator-max-microvolt = <3300000>;
-		// 	regulator-initial-mode = <RPMH_REGULATOR_MODE_HPM>;
-		// };
+		vreg_l4c_3v3: ldo4 {
+			regulator-min-microvolt = ;
+			regulator-max-microvolt = ;
+			regulator-initial-mode = <RPMH_REGULATOR_MODE_HPM>;
+		};
 
 		ldo6 { /* sd card vqmmc? */
-			regulator-min-microvolt = <1800000>;
-			regulator-max-microvolt = <2950000>;
+			regulator-min-microvolt = ;
+			regulator-max-microvolt = ;
 			regulator-initial-mode = <RPMH_REGULATOR_MODE_HPM>;
 		};
 
 		ldo7 {
-			regulator-min-microvolt = <3000000>;
-			regulator-max-microvolt = <3000000>;
+			regulator-min-microvolt = ;
+			regulator-max-microvolt = ;
 			regulator-initial-mode = <RPMH_REGULATOR_MODE_HPM>;
 		};
 
 		ldo8 {
-			regulator-min-microvolt = <1800000>;
-			regulator-max-microvolt = <1800000>;
+			regulator-min-microvolt = ;
+			regulator-max-microvolt = ;
 			regulator-initial-mode = <RPMH_REGULATOR_MODE_HPM>;
 		};
 
 		ldo9 {
-			regulator-min-microvolt = <2504000>;
-			regulator-max-microvolt = <2904000>;
+			regulator-min-microvolt = ;
+			regulator-max-microvolt = ;
 			regulator-initial-mode = <RPMH_REGULATOR_MODE_HPM>;
 		};
 
 		ldo10 {
-			/* voltage constraints are not in ACPI */
 			regulator-initial-mode = <RPMH_REGULATOR_MODE_HPM>;
 		};
 
 		vreg_l11c_3p3: ldo11 {
-			regulator-min-microvolt = <3312000>; // 3000000
-			regulator-max-microvolt = <3312000>;
+			regulator-min-microvolt = ; // 3000000 // <raised eyebrow emoji>
+			regulator-max-microvolt = ;
 			regulator-initial-mode = <RPMH_REGULATOR_MODE_HPM>;
 		};
 
 		vreg_bob: bob {
-			/* voltage constraints are not in ACPI */
 			regulator-initial-mode = <RPMH_REGULATOR_MODE_HPM>;
 		};
 	};
@@ -323,92 +309,89 @@
 		vdd-l13-l16-l17-supply = <&vreg_bob>;
 
 		vreg_s4e_0p98: smps4 {
-			/* voltage constraints are not in ACIP */
 			regulator-initial-mode = <RPMH_REGULATOR_MODE_HPM>;
 		};
 
 		vreg_s5e_2p05: smps5 {
-			/* voltage constraints are not in ACPI */
+
 			regulator-initial-mode = <RPMH_REGULATOR_MODE_HPM>;
 		};
 
 		vreg_l1e_0p75: ldo1 {
-			regulator-min-microvolt = <752000>;
-			regulator-max-microvolt = <752000>;
+			regulator-min-microvolt = ;
+			regulator-max-microvolt = ;
 			regulator-initial-mode = <RPMH_REGULATOR_MODE_HPM>;
 		};
 
 		ldo2 {
-			/* voltage constraints are not in ACPI */
+
 			regulator-initial-mode = <RPMH_REGULATOR_MODE_HPM>;
 		};
 
 		ldo4 {
-			/* voltage constraints are not in ACPI */
+
 			regulator-initial-mode = <RPMH_REGULATOR_MODE_HPM>;
 		};
 
 		vreg_l5e_0p88: ldo5 {
-			regulator-min-microvolt = <880000>;
-			regulator-max-microvolt = <880000>;
+			regulator-min-microvolt = ;
+			regulator-max-microvolt = ;
 			regulator-initial-mode = <RPMH_REGULATOR_MODE_HPM>;
 		};
 
 		vreg_l7e_1p8: ldo7 {
-			regulator-min-microvolt = <1800000>;
-			regulator-max-microvolt = <1800000>;
+			regulator-min-microvolt = ;
+			regulator-max-microvolt = ;
 			regulator-initial-mode = <RPMH_REGULATOR_MODE_HPM>;
 		};
 
 		ldo8 {
-			/* voltage constraints are not in ACPI */
 			regulator-initial-mode = <RPMH_REGULATOR_MODE_HPM>;
 		};
 
 		vreg_l9e_0p88: ldo9 {
-			regulator-min-microvolt = <880000>;
-			regulator-max-microvolt = <912000>;
+			regulator-min-microvolt = ;
+			regulator-max-microvolt = ;
 			regulator-initial-mode = <RPMH_REGULATOR_MODE_HPM>;
 		};
 
 		vreg_l10e_2p9: ldo10 {
-			regulator-min-microvolt = <2504000>; // 2904000?
-			regulator-max-microvolt = <2904000>;
+			regulator-min-microvolt = ; // 2904000?
+			regulator-max-microvolt = ;
 			regulator-initial-mode = <RPMH_REGULATOR_MODE_HPM>;
 		};
 
 		vreg_l12e_1p8: ldo12 {
-			regulator-min-microvolt = <1800000>;
-			regulator-max-microvolt = <1800000>;
+			regulator-min-microvolt = ;
+			regulator-max-microvolt = ;
 			regulator-initial-mode = <RPMH_REGULATOR_MODE_HPM>;
 		};
 
 		ldo13 {
-			/* voltage constraints are not in ACPI */
 			regulator-initial-mode = <RPMH_REGULATOR_MODE_HPM>;
 		};
 
 		ldo14 {
-			regulator-min-microvolt = <1800000>;
-			regulator-max-microvolt = <1800000>;
+			regulator-min-microvolt = ;
+			regulator-max-microvolt = ;
 			regulator-initial-mode = <RPMH_REGULATOR_MODE_HPM>;
 		};
 
 		ldo15 {
-			regulator-min-microvolt = <1800000>;
-			regulator-max-microvolt = <1800000>;
+			regulator-min-microvolt = ;
+			regulator-max-microvolt = ;
 			regulator-initial-mode = <RPMH_REGULATOR_MODE_HPM>;
 		};
 
 		vreg_l16e_3p0: ldo16 {
-			regulator-min-microvolt = <3072000>;
-			regulator-max-microvolt = <3072000>;
+			regulator-min-microvolt = ;
+			regulator-max-microvolt = ;
 			regulator-initial-mode = <RPMH_REGULATOR_MODE_HPM>;
 		};
 
 		ldo17 {
-			regulator-min-microvolt = <2960000>;
-			regulator-max-microvolt = <2960000>;
+			regulator-min-microvolt = ;
+			regulator-max-microvolt = ;
 			regulator-initial-mode = <RPMH_REGULATOR_MODE_HPM>;
 		};
 	};
@@ -453,7 +436,7 @@
 
 &i2c7 {
 	status = "okay";
-	clock-frequency = <100000>;
+	clock-frequency = <100000>; //hypothetically safe, recheck
 
 	pinctrl-names = "default";
 	pinctrl-0 = <&i2c7_active>, <&i2c7_hid_active>;
@@ -626,124 +609,124 @@
 	firmware-name = "qcom/sc8180x/sm-np545/qcmpss8180_nm.mbn"; //VERIFY MODEL NAME
 };
 
-&tlmm {
-	gpio-reserved-ranges = <0 4>, <47 4>, <126 4>;
+// &tlmm { // Check basically all of this against np545 ACPI
+// 	gpio-reserved-ranges = <0 4>, <47 4>, <126 4>;
 
-	dp0_sbu_sw_en: dp0-sbu-sw-en {
-		sel {
-			pins = "gpio100";
-			function = "gpio";
-			output-low;
-		};
+// 	dp0_sbu_sw_en: dp0-sbu-sw-en {
+// 		sel {
+// 			pins = "gpio100";
+// 			function = "gpio";
+// 			output-low;
+// 		};
 
-		oe-n {
-			pins = "gpio152";
-			function = "gpio";
-			output-low;
-		};
-	};
+// 		oe-n {
+// 			pins = "gpio152";
+// 			function = "gpio";
+// 			output-low;
+// 		};
+// 	};
 
-	dp1_sbu_sw_en: dp1-sbu-sw-en {
-		sel {
-			pins = "gpio187";
-			function = "gpio";
-			output-low;
-		};
+// 	dp1_sbu_sw_en: dp1-sbu-sw-en {
+// 		sel {
+// 			pins = "gpio187";
+// 			function = "gpio";
+// 			output-low;
+// 		};
 
-		oe-n {
-			pins = "gpio188";
-			function = "gpio";
-			output-low;
-		};
-	};
+// 		oe-n {
+// 			pins = "gpio188";
+// 			function = "gpio";
+// 			output-low;
+// 		};
+// 	};
 
-	edp_hpd_active: epd-hpd-active-state {
-		pins = "gpio10";
-		function = "edp_hot";
-	};
+// 	edp_hpd_active: epd-hpd-active-state {
+// 		pins = "gpio10";
+// 		function = "edp_hot";
+// 	};
 
-	i2c1_active: i2c1-active-state {
-		pins = "gpio114", "gpio115";
-		function = "qup1";
+// 	i2c1_active: i2c1-active-state {
+// 		pins = "gpio114", "gpio115";
+// 		function = "qup1";
 
-		bias-pull-up;
-		drive-strength = <2>;
-	};
+// 		bias-pull-up;
+// 		drive-strength = <2>;
+// 	};
 
-	touchscreen_active: touchscreen-active-state {
-		pins = "gpio123";
-		function = "gpio";
+// 	touchscreen_active: touchscreen-active-state {
+// 		pins = "gpio123";
+// 		function = "gpio";
 
-		input-enable;
-		bias-pull-up;
-		drive-strength = <2>;
-	};
+// 		input-enable;
+// 		bias-pull-up;
+// 		drive-strength = <2>;
+// 	};
 
-	i2c7_active: i2c7-active-state {
-		pins = "gpio98", "gpio99";
-		function = "qup7";
+// 	i2c7_active: i2c7-active-state {
+// 		pins = "gpio98", "gpio99";
+// 		function = "qup7";
 
-		bias-pull-up;
-		drive-strength = <2>;
-	};
+// 		bias-pull-up;
+// 		drive-strength = <2>;
+// 	};
 
-	i2c7_hid_active: i2c7-hid-active-state {
-		pins = "gpio37", "gpio24";
-		function = "gpio";
+// 	i2c7_hid_active: i2c7-hid-active-state {
+// 		pins = "gpio37", "gpio24";
+// 		function = "gpio";
 
-		input-enable;
-		bias-pull-up;
-		drive-strength = <2>;
-	};
+// 		input-enable;
+// 		bias-pull-up;
+// 		drive-strength = <2>;
+// 	};
 
-	pcie3_default_state: pcie3-default-state {
-		clkreq {
-			pins = "gpio179";
-			function = "pci_e3";
-			bias-pull-up;
-		};
+// 	pcie3_default_state: pcie3-default-state {
+// 		clkreq {
+// 			pins = "gpio179";
+// 			function = "pci_e3";
+// 			bias-pull-up;
+// 		};
 
-		reset-n {
-			pins = "gpio178";
-			function = "gpio";
+// 		reset-n {
+// 			pins = "gpio178";
+// 			function = "gpio";
 
-			drive-strength = <2>;
-			output-low;
-			bias-pull-down;
-		};
+// 			drive-strength = <2>;
+// 			output-low;
+// 			bias-pull-down;
+// 		};
 
-		wake-n {
-			pins = "gpio180";
-			function = "gpio";
+// 		wake-n {
+// 			pins = "gpio180";
+// 			function = "gpio";
 
-			drive-strength = <2>;
-			bias-pull-up;
-		};
-	};
+// 			drive-strength = <2>;
+// 			bias-pull-up;
+// 		};
+// 	};
 
-	uart13_state: uart13-state {
-		cts {
-			pins = "gpio43";
-			function = "qup13";
-			bias-pull-down;
-		};
+// 	uart13_state: uart13-state {
+// 		cts {
+// 			pins = "gpio43";
+// 			function = "qup13";
+// 			bias-pull-down;
+// 		};
 
-		rts-tx {
-			pins = "gpio44", "gpio45";
-			function = "qup13";
-			drive-strength = <2>;
-			bias-disable;
-		};
+// 		rts-tx {
+// 			pins = "gpio44", "gpio45";
+// 			function = "qup13";
+// 			drive-strength = <2>;
+// 			bias-disable;
+// 		};
 
-		rx {
-			pins = "gpio46";
-			function = "qup13";
-			bias-pull-up;
-		};
-	};
-};
+// 		rx {
+// 			pins = "gpio46";
+// 			function = "qup13";
+// 			bias-pull-up;
+// 		};
+// 	};
+// };
 
-&uart13 {
+&uart13 { //should be fine
 	status = "okay";
 
 	pinctrl-names = "default";
@@ -760,16 +743,16 @@
 	};
 };
 
-&ufs_mem_hc {
+&ufs_mem_hc { 
 	status = "okay";
 
-	reset-gpios = <&tlmm 190 GPIO_ACTIVE_LOW>;
+	// reset-gpios = <&tlmm 190 GPIO_ACTIVE_LOW>; 
 
 	vcc-supply = <&vreg_l10e_2p9>;
-	vcc-max-microamp = <155000>;
+	vcc-max-microamp = ;
 
 	vccq2-supply = <&vreg_l7e_1p8>;
-	vccq2-max-microamp = <425000>;
+	vccq2-max-microamp = ;
 };
 
 &ufs_mem_phy {
@@ -881,22 +864,6 @@
 	vdd-1.3-rfa-supply = <&vreg_l9a_1p3>;
 	vdd-3.3-ch0-supply = <&vreg_l11c_3p3>;
 	//vdd-3.3-ch1-supply = <&vreg_l10c_3p3>; not used?
-};
-
-/* PINCTRL */
-
-&pmc8180c_gpios {
-	bl_pwm_default_state: bl-pwm-default-state {
-		en {
-			pins = "gpio8";
-			function = "normal";
-		};
-
-		pwm {
-			pins = "gpio10";
-			function = "func1";
-		};
-	};
 };
 
 
