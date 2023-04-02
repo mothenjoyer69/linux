@@ -8,26 +8,97 @@
 #include <dt-bindings/regulator/qcom,rpmh-regulator.h>
 #include <dt-bindings/gpio/gpio.h>
 #include "sc8180x.dtsi"
-#include "pmc8180.dtsi"
-#include "pmc8180c.dtsi"
+#include "sc8180x-pmics.dtsi"
 
 / {
-	model = "Samsung Galaxy Book S";
-	compatible = "samsung,w767", "qcom,sc8180x";
+	model = "Samsung Galaxy Book Go 5G";
+	compatible = "samsung,n545", "qcom,sc8180x";
+
+	aliases {
+		serial0 = &uart13;
+	};
 
 	chosen { };
 
-	backlight: backlight {
-		compatible = "pwm-backlight";
-		pwms = <&pmc8180c_lpg 4 1000000>;
-		enable-gpios = <&pmc8180c_gpios 8 GPIO_ACTIVE_HIGH>;
-
-		pinctrl-names = "default";
-		pinctrl-0 = <&bl_pwm_default_state>;
-	};	
-
 	reserved-memory {
+
+        // Sources for memory regions:
+		// - Windows Device Manager/ACPI
+		// - Windows Registry/driver .inf files
+
+		// Windows Registry entries:
+		//
+		// - ADSP:
+		//   - ADSP:
+        //   - alignment:    0x00100000
+        //   - reservation:  0x02200000
+        //
+        // - CDSP:
+        //   - alignment:    0x00100000
+        //   - reservation:  0x00800000
+        //
+        // - GFXSUC:
+        //   - alignment:    0x00001000
+        //   - reservation:  0x00005000
+        //
+        // - MPSS/MODEM:
+        //   - address:      0x8d800000
+        //   - alignment:    0x00400000
+        //   - reservation:  0x03000000
+        //
+        // - SCSS/SLPI:
+        //   - alignment:    0x00100000
+        //   - reservation:  0x01400000
+        //
+        // - IPA (no firmware?):
+        //   - alignment:    0x00100000
+        //   - reservation:  0x00100000
+        //
+        // - SPSS (no firmware?):
+        //   - alignment:    0x00100000
+        //   - reservation:  0x00100000
+        //
+        // - MBA (bogus?):
+        //   - alignment:    0x00100000
+        //
+        // - VENUS (bogus?):
+        //   - alignment:          0x0
+        //   - reservation:  0x00500000
+        //
+        // - WCNSS (bogus?):
+        //   - alignment:    0x00100000
+        //   - reservation:        0x0
+
+		// Windows Device Manager memory map:
+		//
+		// [...]
+		// 0x85d00000 ++  0x200000	RMTFS
+		// 0x85f00000 ++ 0x5d00000	<free>
+		// 0x8b700000 ++  0x500000	CAMERA
+		// 0x8bc00000 ++  0x180000	WLAN
+		// 0x8bd80000 ++ 0xe780000	<free for image loader>
+		// 0x9a500000 ++  0x600000	QSM
+		// [...]
+
+		// Resulting memory map:
+		//
+		// [...]
+		// 0x85500000 ++  0x200000	RMTFS
+		// 0x85700000
+		// 0x85f00000 ++ 0x5d00000	<reserved>
+		// 0x8b700000 ++  0x500000	CAMERA
+		// 0x8bc00000 ++  0x180000	WLAN
+		// 0x8bd80000 ++ 0x1a80000	<free>
+		// 0x8d800000 ++ 0x9600000	MPSS
+		// 0x96e00000 ++ 0x1a00000	ADSP
+		// 0x98800000 ++  0x800000	CDSP
+		// 0x99000000 ++ 0x1400000	SCSS
+		// 0x9a400000 ++    0x5000	GFXSUC
+		// 0x9a405000 ++   0xfb000	<free>
+		// 0x9a500000 ++  0x600000	QSM
+		// [...]
 		/* Note: rmtfs region in ACPI/Windows starts from 0x85d00000 */
+        
 		rmtfs_mem: memory@85500000 {
 			compatible = "qcom,rmtfs-mem";
 			reg = <0x0 0x85500000 0x0 0x200000>;
@@ -127,18 +198,17 @@
 			/* voltage constraints are not in ACPI */
 		};
 
-		ldo1 { // good
+		ldo1 {
 			regulator-min-microvolt = <1200000>;
 			regulator-max-microvolt = <1200000>;
-			/* failed to set initial mode -ETIMEDOUT */ 
 			// regulator-initial-mode = <RPMH_REGULATOR_MODE_HPM>;
 		};
 
-		ldo2 { 
+		ldo2 {
 			regulator-min-microvolt = <2850000>;
 			regulator-max-microvolt = <2850000>;
 			/* failed to set initial mode -ETIMEDOUT */ 
-			regulator-initial-mode = <RPMH_REGULATOR_MODE_HPM>;
+			// regulator-initial-mode = <RPMH_REGULATOR_MODE_HPM>;
 		};
 
 		ldo3 {
@@ -271,10 +341,11 @@
 
 		/* ldo4 is needed for touch, but causes failed to get current voltage -ENOTRECOVERABLE */
 
-		vreg_l4c_3v3: ldo4 {
-			/* voltage constraints not in ACPI */
-			regulator-initial-mode = <RPMH_REGULATOR_MODE_HPM>;
-		};
+		// vreg_l4c_3v3: ldo4 {
+		// 	regulator-min-microvolt = <3300000>;
+		// 	regulator-max-microvolt = <3300000>;
+		// 	regulator-initial-mode = <RPMH_REGULATOR_MODE_HPM>;
+		// };
 
 		ldo6 { /* sd card vqmmc? */
 			regulator-min-microvolt = <1800000>;
@@ -289,7 +360,8 @@
 		};
 
 		ldo8 {
-			/* voltage constraints not in ACPI */
+			regulator-min-microvolt = <1800000>;
+			regulator-max-microvolt = <1800000>;
 			regulator-initial-mode = <RPMH_REGULATOR_MODE_HPM>;
 		};
 
@@ -305,7 +377,7 @@
 		};
 
 		vreg_l11c_3p3: ldo11 {
-			regulator-min-microvolt = <3300000>; // 3000000
+			regulator-min-microvolt = <3312000>; // 3000000
 			regulator-max-microvolt = <3312000>;
 			regulator-initial-mode = <RPMH_REGULATOR_MODE_HPM>;
 		};
@@ -385,7 +457,8 @@
 		};
 
 		vreg_l12e_1p8: ldo12 {
-			/* voltage constraints are not in ACPI */
+			regulator-min-microvolt = <1800000>;
+			regulator-max-microvolt = <1800000>;
 			regulator-initial-mode = <RPMH_REGULATOR_MODE_HPM>;
 		};
 
@@ -395,7 +468,8 @@
 		};
 
 		ldo14 {
-			/* voltage constraints are not in ACPI */
+			regulator-min-microvolt = <1800000>;
+			regulator-max-microvolt = <1800000>;
 			regulator-initial-mode = <RPMH_REGULATOR_MODE_HPM>;
 		};
 
@@ -419,225 +493,13 @@
 	};
 };
 
-&gpu {
+&dispcc {
 	status = "okay";
-
-	zap-shader {
-		memory-region = <&gpu_mem>;
-		firmware-name = "qcom/sc8180x/qcdxkmsuc8180.mbn";
-	};
 };
 
-&i2c1 {
-	status = "okay";
-	clock-frequency = <100000>;
-
-	pinctrl-names = "default";
-	pinctrl-0 = <&i2c1_active>;
-
-	/* Does not work so far. PMIC fails to probe with ldo4c enabled */
-	
-};
-
-&i2c4 {
-	status = "okay";
-	clock-frequency = <100000>;
-
-	pinctrl-names = "default";
-	pinctrl-0 = <&i2c4_active>;
-};
-
-&i2c5 {
-	status = "okay";
-	clock-frequency = <100000>;
-
-	pinctrl-names = "default";
-	pinctrl-0 = <&i2c5_active>;
-};
-
-&i2c7 {
-	status = "okay";
-	clock-frequency = <100000>;
-
-	pinctrl-names = "default";
-	pinctrl-0 = <&i2c7_active>;
-
-	/* BH1733 */
-	light-sensor@29 {
-		compatible = "rohm,bh1780gli";
-		reg = <0x29>;
-		/* ldo7c */
-		/* ldo8c */
-	};
-};
-
-&i2c8 {
-	status = "okay";
-	clock-frequency = <100000>;
-
-	pinctrl-names = "default";
-	pinctrl-0 = <&i2c8_active>;
-};
-
-&i2c9 {
-	status = "okay";
-	clock-frequency = <100000>;
-
-	pinctrl-names = "default";
-	pinctrl-0 = <&i2c9_active>;
-
-	/*
-	 * 0x1a EMEC part (not visible in i2cdetect)
-	 * 0x25 EMEC part
-	 * 0x33 EMEC part
-	 * 0x5a unknown
-	 */
-};
-
-&i2c11 {
-	status = "okay";
-	clock-frequency = <100000>;
-
-	pinctrl-names = "default";
-	pinctrl-0 = <&i2c11_active>;
-
-	/* 0x1a EMEC part */
-};
-
-&i2c14 {
-	status = "okay";
-	clock-frequency = <100000>;
-
-	pinctrl-names = "default";
-	pinctrl-0 = <&i2c14_active>;
-};
-
-&i2c15 {
-	status = "okay";
-	clock-frequency = <100000>;
-
-	pinctrl-names = "default";
-	pinctrl-0 = <&i2c15_active>;
-
-	/* 
-	 * SSPN - 0x2c 
-	 * what is that? idk
-	 * pull none gpio 0x0019 (output?)
-	 * edge pull none 0x1388 interrupt: 0x0074
-	 */
-};
-
-&i2c17 {
-	status = "okay";
-	clock-frequency = <100000>;
-
-	pinctrl-names = "default";
-	pinctrl-0 = <&i2c17_active>;
-};
-
-&i2c18 {
-	status = "okay";
-	clock-frequency = <100000>;
-
-	pinctrl-names = "default";
-	pinctrl-0 = <&i2c18_active>;
-
-	/*
-	 * 0x25 EMEC part
-	 * 0x33 EMEC part
-	 * 0x5a unknown
-	 */
-};
-
-&i2c19 {
-	status = "okay";
-	clock-frequency = <100000>;
-
-	pinctrl-names = "default";
-	pinctrl-0 = <&i2c19_active>;
-	
-	/* 0x09 and 0x0b - EMEC parts */
-};
 
 &mdss {
-	status = "okay";
-};
-
-// &mdss_dp0 {
-// 	status = "okay";
-
-// 	data-lanes = <0 1 2 3>;
-
-// 	pinctrl-names = "default";
-// 	pinctrl-0 = <&dp0_sbu_sw_en>;
-
-// 	mode-switch;
-// 	svid = /bits/ 16 <0xff01>;
-// 	ports {
-// 		port@1 {
-// 			reg = <1>;
-// 			dp0_mode: endpoint {
-// 				remote-endpoint = <&ucsi_port_0_dp>;
-// 			};
-// 		};
-// 	};
-// };
-
-// &mdss_dp1 {
-// 	status = "okay";
-
-// 	data-lanes = <0 1 2 3>;
-
-// 	pinctrl-names = "default";
-// 	pinctrl-0 = <&dp1_sbu_sw_en>;
-
-// 	mode-switch;
-// 	svid = /bits/ 16 <0xff01>;
-
-// 	ports {
-// 		port@1 {
-// 			reg = <1>;
-// 			dp1_mode: endpoint {
-// 				remote-endpoint = <&ucsi_port_1_dp>;
-// 			};
-// 		};
-// 	};
-// };
-
-&mdss_edp {
-	status = "okay";
-
-	data-lanes = <0 1 2 3>;
-
-	pinctrl-names = "default";
-	pinctrl-0 = <&edp_hpd_active>;
-
-	aux-bus {
-		/* BOE TE133FHE-TS0 Panel */
-		panel {
-			compatible = "edp-simple";
-			no-hpd;
-
-			backlight = <&backlight>;
-
-			ports {
-				port {
-					panel_in: endpoint {
-						remote-endpoint = <&mdss_edp_out>;
-					};
-				};
-			};
-		};
-	};
-
-	ports {
-		port@1 {
-			reg = <1>;
-			mdss_edp_out: endpoint {
-				remote-endpoint = <&panel_in>;
-			};
-		};
-	};
+	status = "disabled";
 };
 
 &pmc8180c_lpg {
@@ -659,89 +521,21 @@
 &remoteproc_adsp {
 	status = "okay";
 	memory-region = <&adsp_mem>;
-	firmware-name = "qcom/samsung/w767/qcadsp8180.mbn";
+	firmware-name = "qcom/samsung/n545/qcadsp8180.mbn";
 };
-
-// &remoteproc_adsp_glink {
-// 	pmic-glink {
-// 		compatible = "qcom,glink-ucsi"; //CONFIG_RPMSG_QCOM_GLINK_SMEM
-// 		qcom,glink-channels = "PMIC_RTR_ADSP_APPS";
-
-// 		#address-cells = <1>;
-// 		#size-cells = <0>;
-
-// 		connector@0 {
-// 			compatible = "usb-c-connector";
-
-// 			reg = <0>;
-// 			power-role = "dual";
-// 			data-role = "dual";
-
-// 			ports {
-// 				#address-cells = <1>;
-// 				#size-cells = <0>;
-
-// 				port@0 {
-// 					reg = <0>;
-
-// 					ucsi_port_0_dp: endpoint {
-// 						remote-endpoint = <&dp0_mode>;
-// 					};
-// 				};
-
-// 				port@1 {
-// 					reg = <1>;
-
-// 					ucsi_port_0_switch: endpoint {
-// 						remote-endpoint = <&usb_prim_qmp_switch>;
-// 					};
-// 				};
-// 			};
-// 		};
-
-// 		connector@1 {
-// 			compatible = "usb-c-connector";
-
-// 			reg = <1>;
-// 			power-role = "dual";
-// 			data-role = "dual";
-
-// 			ports {
-// 				#address-cells = <1>;
-// 				#size-cells = <0>;
-
-// 				port@0 {
-// 					reg = <0>;
-
-// 					ucsi_port_1_dp: endpoint {
-// 						remote-endpoint = <&dp1_mode>;
-// 					};
-// 				};
-
-// 				port@1 {
-// 					reg = <1>;
-
-// 					ucsi_port_1_switch: endpoint {
-// 						remote-endpoint = <&usb_sec_qmp_switch>;
-// 					};
-// 				};
-// 			};
-// 		};
-// 	};
-// };
 
 &remoteproc_cdsp {
 	status = "okay";
 
 	memory-region = <&cdsp_mem>;
-	firmware-name = "qcom/samsung/w767/qccdsp8180.mbn";
+	firmware-name = "qcom/samsung/n545/qccdsp8180.mbn";
 };
 
 &remoteproc_mpss {
 	status = "okay";
 
 	memory-region = <&mpss_mem>;
-	firmware-name = "qcom/samsung/w767/qcmpss8180_XEF.mbn";
+	firmware-name = "qcom/samsung/n545/qcmpss8180_XEF.mbn";
 };
 
 &spmi_bus {
@@ -753,211 +547,11 @@
 	};
 };
 
-&tlmm {
-	// gpio-reserved-ranges = <0 4>, <47 4>, <126 4>;
-	gpio-reserved-ranges = <0 4>, <126 4>;
-
-	dp0_sbu_sw_en: dp0-sbu-sw-en {
-		sel {
-			pins = "gpio100";
-			function = "gpio";
-			output-low;
-		};
-
-		oe-n {
-			pins = "gpio152";
-			function = "gpio";
-			output-low;
-		};
-	};
-
-	dp1_sbu_sw_en: dp1-sbu-sw-en {
-		sel {
-			pins = "gpio187";
-			function = "gpio";
-			output-low;
-		};
-
-		oe-n {
-			pins = "gpio188";
-			function = "gpio";
-			output-low;
-		};
-	};
-
-	edp_hpd_active: epd-hpd-active-state {
-		pins = "gpio10";
-		function = "edp_hot";
-	};
-
-	touchscreen_active: touchscreen-active-state {
-		pins = "gpio123";
-		function = "gpio";
-
-		input-enable;
-		bias-pull-up;
-		drive-strength = <2>;
-	};
-
-	i2c1_active: i2c1-active-state {
-		pins = "gpio114", "gpio115";
-		function = "qup1";
-
-		bias-pull-up;
-		drive-strength = <2>;
-	};
-
-	i2c4_active: i2c4-active-state {
-		pins = "gpio51", "gpio52";
-		function = "qup4";
-
-		bias-pull-up;
-		drive-strength = <2>;
-	};
-
-	i2c5_active: i2c5-active-state {
-		pins = "gpio121", "gpio122";
-		function = "qup5";
-
-		bias-pull-up;
-		drive-strength = <2>;
-	};
-
-	i2c7_active: i2c7-active-state {
-		pins = "gpio98", "gpio99";
-		function = "qup7";
-
-		bias-pull-up;
-		drive-strength = <2>;
-	};
-
-	i2c8_active: i2c8-active-state {
-		pins = "gpio88", "gpio89";
-		function = "qup8";
-
-		bias-pull-up;
-		drive-strength = <2>;
-	};
-
-	i2c9_active: i2c9-active-state {
-		pins = "gpio39", "gpio40";
-		function = "qup9";
-
-		bias-pull-up;
-		drive-strength = <2>;
-	};
-
-	i2c11_active: i2c11-active-state {
-		pins = "gpio94", "gpio95";
-		function = "qup11";
-
-		bias-pull-up;
-		drive-strength = <2>;
-	};
-
-	i2c14_active: i2c14-active-state {
-		pins = "gpio47", "gpio48";
-		function = "qup14";
-
-		bias-pull-up;
-		drive-strength = <2>;
-	};
-
-	i2c15_active: i2c15-active-state {
-		pins = "gpio27", "gpio28";
-		function = "qup15";
-
-		bias-pull-up;
-		drive-strength = <2>;
-	};
-
-	i2c17_active: i2c17-active-state {
-		pins = "gpio55", "gpio56";
-		function = "qup17";
-
-		bias-pull-up;
-		drive-strength = <2>;
-	};
-
-	i2c18_active: i2c18-active-state {
-		pins = "gpio23", "gpio24";
-		function = "qup18";
-
-		bias-pull-up;
-		drive-strength = <2>;
-	};
-
-	i2c19_active: i2c19-active-state {
-		pins = "gpio181", "gpio182";
-		function = "qup19";
-
-		bias-pull-up;
-		drive-strength = <2>;
-	};
-
-
-	pcie3_default_state: pcie3-default-state {
-		clkreq {
-			pins = "gpio179";
-			function = "pci_e3";
-			bias-pull-up;
-		};
-
-		reset-n {
-			pins = "gpio178";
-			function = "gpio";
-
-			drive-strength = <2>;
-			output-low;
-			bias-pull-down;
-		};
-
-		wake-n {
-			pins = "gpio180";
-			function = "gpio";
-
-			drive-strength = <2>;
-			bias-pull-up;
-		};
-	};
-
-	uart13_state: uart13-state {
-		cts {
-			pins = "gpio43";
-			function = "qup13";
-			bias-pull-down;
-		};
-
-		rts-tx {
-			pins = "gpio44", "gpio45";
-			function = "qup13";
-			drive-strength = <2>;
-			bias-disable;
-		};
-
-		rx {
-			pins = "gpio46";
-			function = "qup13";
-			bias-pull-up;
-		};
-	};
-};
-
 &uart13 {
 	status = "okay";
 
 	pinctrl-names = "default";
 	pinctrl-0 = <&uart13_state>;
-
-	bluetooth {
-		compatible = "qcom,wcn3998-bt";
-
-		vddio-supply = <&vreg_s4a_1p8>;
-		vddxo-supply = <&vreg_l7a_1p8>;
-		vddrf-supply = <&vreg_l9a_1p3>;
-		vddch0-supply = <&vreg_l11c_3p3>;
-		max-speed = <3200000>;
-	};
 };
 
 &ufs_mem_hc {
@@ -1028,9 +622,9 @@
 	vdda-pll-supply = <&vreg_l5e_0p88>;
 };
 
-// &usb_prim_qmp_switch {
-// 	remote-endpoint = <&ucsi_port_0_switch>;
-// };
+&usb_prim_qmp_switch {
+	remote-endpoint = <&ucsi_port_0_switch>;
+};
 
 &usb_prim {
 	status = "okay";
@@ -1068,7 +662,7 @@
 };
 
 &wifi {
-	status = "okay";
+	status = "disabled";
 
 	memory-region = <&wlan_mem>;
 
@@ -1077,20 +671,4 @@
 	vdd-1.3-rfa-supply = <&vreg_l9a_1p3>;
 	vdd-3.3-ch0-supply = <&vreg_l11c_3p3>;
 	//vdd-3.3-ch1-supply = <&vreg_l10c_3p3>; not used?
-};
-
-/* PINCTRL */
-
-&pmc8180c_gpios {
-	bl_pwm_default_state: bl-pwm-default-state {
-		en {
-			pins = "gpio8";
-			function = "normal";
-		};
-
-		pwm {
-			pins = "gpio10";
-			function = "func1";
-		};
-	};
 };
